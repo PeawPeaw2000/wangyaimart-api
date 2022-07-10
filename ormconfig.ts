@@ -10,7 +10,7 @@ const config: TypeOrmModuleOptions = {
   username: process.env.MYSQL_USERNAME,
   password: process.env.MYSQL_PASSWORD,
   database: process.env.MYSQL_DATABASE,
-  synchronize: true,
+  synchronize: false,
   logging: true,
   entities: [Users],
 };
