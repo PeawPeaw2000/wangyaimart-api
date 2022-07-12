@@ -1,10 +1,16 @@
-import { Injectable } from '@nestjs/common';
-
-// This should be a real class/interface representing a user entity
+import { BadRequestException, Injectable } from '@nestjs/common';
+import { Users } from './entities/users.entity';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { CreateUsersDto } from './dto/create-users.dto';
 export type User = any;
 
 @Injectable()
 export class UsersService {
+  constructor(
+    @InjectRepository(Users)
+    private usersRepository: Repository<Users>,
+  ){}
   private readonly users = [
     {
       userId: 1,
@@ -17,8 +23,13 @@ export class UsersService {
       password: 'guess',
     },
   ];
-
-  async findOne(username: string): Promise<User | undefined> {
-    return this.users.find(user => user.username === username);
+  async findOne(condition: any): Promise<Users> {
+    return this.usersRepository.findOneBy(condition);
+  }
+  async register(user: CreateUsersDto) : Promise<Users> {
+    if(await this.usersRepository.findOneBy({email: user.email})){
+      throw new BadRequestException("duplicate email")
+    }
+    return await this.usersRepository.save(user);
   }
 }
