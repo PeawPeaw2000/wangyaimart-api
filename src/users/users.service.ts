@@ -11,7 +11,7 @@ export class UsersService {
     private usersRepository: Repository<Users>,
   ){}
   async findOne(condition: any): Promise<Users> {
-    return this.usersRepository.findOneBy(condition);
+    return await this.usersRepository.findOneBy(condition);
   }
   async register(user: CreateUsersDto) : Promise<Users> {
     if(await this.usersRepository.findOneBy({email: user.email})){
